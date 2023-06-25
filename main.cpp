@@ -10,43 +10,17 @@
 #include "stb_image.h"
 #include "ImGuiFileDialog.h"
 
-void ApplyGrayscale(unsigned char *imageData, int width, int height)
-{
-    for (int i = 0; i < width * height; ++i)
-    {
-        unsigned char r = imageData[i * 3];
-        unsigned char g = imageData[i * 3 + 1];
-        unsigned char b = imageData[i * 3 + 2];
-
-        // Calculate grayscale value
-        unsigned char gray = static_cast<unsigned char>(0.2989 * r + 0.5870 * g + 0.1140 * b);
-
-        // Set grayscale value to all channels
-        imageData[i * 3] = gray;
-        imageData[i * 3 + 1] = gray;
-        imageData[i * 3 + 2] = gray;
-    }
-}
-
-void ApplyNegative(unsigned char *imageData, int width, int height)
-{
-    for (int i = 0; i < width * height; ++i)
-    {
-        unsigned char r = imageData[i * 3];
-        unsigned char g = imageData[i * 3 + 1];
-        unsigned char b = imageData[i * 3 + 2];
-
-        // Calculate negative value
-        unsigned char negativeR = 255 - r;
-        unsigned char negativeG = 255 - g;
-        unsigned char negativeB = 255 - b;
-
-        // Set negative value to all channels
-        imageData[i * 3] = negativeR;
-        imageData[i * 3 + 1] = negativeG;
-        imageData[i * 3 + 2] = negativeB;
-    }
-}
+#include "grayscale.h"
+#include "negative.h"
+#include "sepia.h"
+#include "gaussianFilter.h"
+#include "dilation.h"
+#include "erosion.h"
+#include "robertEdgeDetection.h"
+#include "sobelEdgeDetection.h"
+#include "threshold.h"
+#include "solarisation.h"
+#include "crossProcessing.h"
 
 int main()
 {
@@ -141,6 +115,58 @@ int main()
             {
                 ApplyNegative(data, width, height);
             }
+
+            if (ImGui::Button("Apply Sepia"))
+            {
+                ApplySepia(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Gaussian Filter"))
+            {
+                ApplyGaussianFilter(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Robert Edge Detection"))
+            {
+                ApplyRobertEdgeDetection(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Sobel Edge Detection"))
+            {
+                ApplySobelEdgeDetection(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Dilation"))
+            {
+                ApplyDilation(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Erosion"))
+            {
+                ApplyErosion(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Solarisation"))
+            {
+                ApplySolarisation(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Cross Processing"))
+            {
+                ApplyCrossProcessing(data, width, height);
+            }
+
+            if (ImGui::Button("Apply Threshold"))
+            {
+                ApplyThreshold(data, width, height);
+            }
+
+            if (ImGui::Button("Revert"))
+            {
+                stbi_image_free(data);
+                data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
+            }
+
         }
 
         ImGui::End();
