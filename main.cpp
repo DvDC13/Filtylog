@@ -56,6 +56,7 @@ int main()
     std::string filePathName;
     int width, height, channels;
     unsigned char *data = nullptr;
+    GLuint texture;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -95,7 +96,12 @@ int main()
 
         if (data != nullptr)
         {
-            GLuint texture;
+            if (texture != 0)
+            {
+                glDeleteTextures(1, &texture);
+                texture = 0;
+            }
+
             glGenTextures(1, &texture);
             glBindTexture(GL_TEXTURE_2D, texture);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -166,7 +172,6 @@ int main()
                 stbi_image_free(data);
                 data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
             }
-
         }
 
         ImGui::End();
@@ -177,6 +182,12 @@ int main()
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        if (texture != 0)
+        {
+            glDeleteTextures(1, &texture);
+            texture = 0;
+        }
 
         glfwSwapBuffers(window);
     }
