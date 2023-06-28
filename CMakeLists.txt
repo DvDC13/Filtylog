@@ -24,7 +24,7 @@ add_library(stb_image STATIC stb_image/stb_image.cpp)
 include_directories(imGuiFileDialog)
 add_library(imGuiFileDialog STATIC imGuiFileDialog/ImGuiFileDialog.cpp)
 
-include_directories(filters/simpleEffects)
+include_directories(filters/artisticFilters)
 include_directories(filters/utils)
 
 include_directories(glad)

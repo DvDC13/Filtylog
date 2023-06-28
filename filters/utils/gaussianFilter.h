@@ -42,7 +42,7 @@ void ApplyGaussianFilter(unsigned char *imageData, int width, int height, int ga
     delete[] tempImageData;
 }
 
-void imguiGaussianFilter(unsigned char *data, int width, int height, std::vector<unsigned char*> filtersStack)
+void imguiGaussianFilter(unsigned char *data, int width, int height, std::vector<unsigned char*>& filtersStack)
 {
     // Gaussian Filter popup window
     if (ImGui::BeginPopupModal("Gaussian Filter", nullptr, ImGuiWindowFlags_AlwaysAutoResize))

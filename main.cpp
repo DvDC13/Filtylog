@@ -18,7 +18,6 @@
 #include "erosion.h"
 #include "robertEdgeDetection.h"
 #include "sobelEdgeDetection.h"
-#include "threshold.h"
 #include "solarisation.h"
 #include "medianCut.h"
 #include "bilateralFilter.h"
@@ -26,6 +25,7 @@
 #include "quantization.h"
 #include "otsuThreshold.h"
 #include "cartoon.h"
+#include "halftone.h"
 
 int main()
 {
@@ -37,7 +37,7 @@ int main()
     }
 
     // Create a GLFW window
-    GLFWwindow *window = glfwCreateWindow(2000, 1400, "Filtylog", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(1400, 800, "Filtylog", nullptr, nullptr);
     if (!window)
     {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -63,7 +63,7 @@ int main()
     unsigned char *data = nullptr;
     GLuint texture;
 
-    std::vector<unsigned char*> filtersStack;
+    std::vector<unsigned char *> filtersStack;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -155,22 +155,6 @@ int main()
 
             imguiGaussianFilter(data, width, height, filtersStack);
 
-            if (ImGui::Button("Apply Robert Edge Detection"))
-            {
-                ApplyRobertEdgeDetection(data, width, height);
-                unsigned char *filteredData = new unsigned char[width * height * 3];
-                std::memcpy(filteredData, data, width * height * 3);
-                filtersStack.push_back(filteredData);
-            }
-
-            if (ImGui::Button("Apply Sobel Edge Detection"))
-            {
-                ApplySobelEdgeDetection(data, width, height);
-                unsigned char *filteredData = new unsigned char[width * height * 3];
-                std::memcpy(filteredData, data, width * height * 3);
-                filtersStack.push_back(filteredData);
-            }
-
             if (ImGui::Button("Apply Dilation"))
             {
                 ApplyDilation(data, width, height);
@@ -198,14 +182,6 @@ int main()
             if (ImGui::Button("Apply Median Cut"))
             {
                 ApplyMedianCut(data, width, height);
-                unsigned char *filteredData = new unsigned char[width * height * 3];
-                std::memcpy(filteredData, data, width * height * 3);
-                filtersStack.push_back(filteredData);
-            }
-
-            if (ImGui::Button("Apply Threshold"))
-            {
-                ApplyThreshold(data, width, height);
                 unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
@@ -243,6 +219,33 @@ int main()
                 filtersStack.push_back(filteredData);
             }
 
+            // START EDGE DETECTION WINDOW
+            // Create ImGui window
+            ImGui::Begin("Edge Detection");
+
+            if (ImGui::Button("Apply Robert Edge Detection"))
+            {
+                ApplyRobertEdgeDetection(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Sobel Edge Detection"))
+            {
+                ApplySobelEdgeDetection(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            ImGui::End();
+            // END EDGE DETECTION WINDOW
+
+            // START ARTISTIC FILTERS WINDOW
+            // Create ImGui window
+            ImGui::Begin("Artistic Filters");
+
             if (ImGui::Button("Apply Cartoon"))
             {
                 ApplyCartoon(data, width, height);
@@ -251,14 +254,27 @@ int main()
                 filtersStack.push_back(filteredData);
             }
 
+            if (ImGui::Button("Apply Halftone"))
+            {
+                ImGui::OpenPopup("Halftone");
+            }
+
+            imguiHalftone(data, width, height, filtersStack);
+
+            ImGui::End();
+            // END ARTISTIC FILTERS WINDOW
+
+            // START STATE WINDOW
             // Create ImGui window
             ImGui::Begin("State");
 
             if (ImGui::Button("Undo") && filtersStack.size() > 0)
             {
                 stbi_image_free(data);
-                if (filtersStack.size() > 1) data = filtersStack[filtersStack.size() - 2];
-                else data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
+                if (filtersStack.size() > 1)
+                    data = filtersStack[filtersStack.size() - 2];
+                else
+                    data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
                 filtersStack.pop_back();
             }
 
@@ -270,6 +286,7 @@ int main()
             }
 
             ImGui::End();
+            // END STATE WINDOW
 
             ImGui::End();
         }
