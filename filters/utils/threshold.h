@@ -1,6 +1,6 @@
 #pragma once
 
-const int threshold = 128;
+const int threshold = 100;
 
 void ApplyThreshold(unsigned char *imageData, int width, int height)
 {

@@ -20,7 +20,12 @@
 #include "sobelEdgeDetection.h"
 #include "threshold.h"
 #include "solarisation.h"
-#include "crossProcessing.h"
+#include "medianCut.h"
+#include "bilateralFilter.h"
+#include "medianFilter.h"
+#include "quantization.h"
+#include "otsuThreshold.h"
+#include "cartoon.h"
 
 int main()
 {
@@ -32,7 +37,7 @@ int main()
     }
 
     // Create a GLFW window
-    GLFWwindow *window = glfwCreateWindow(1280, 720, "Filtylog", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(2000, 1400, "Filtylog", nullptr, nullptr);
     if (!window)
     {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -57,6 +62,8 @@ int main()
     int width, height, channels;
     unsigned char *data = nullptr;
     GLuint texture;
+
+    std::vector<unsigned char*> filtersStack;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -92,6 +99,8 @@ int main()
             ImGuiFileDialog::Instance()->Close();
 
             data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
+
+            filtersStack.clear();
         }
 
         if (data != nullptr)
@@ -112,66 +121,157 @@ int main()
 
             ImGui::Image(reinterpret_cast<void *>(static_cast<intptr_t>(texture)), ImVec2(width, height));
 
+            // Create ImGui window
+            ImGui::Begin("Filters");
+
             if (ImGui::Button("Apply Grayscale"))
             {
                 ApplyGrayscale(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Negative"))
             {
                 ApplyNegative(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Sepia"))
             {
                 ApplySepia(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Gaussian Filter"))
             {
-                ApplyGaussianFilter(data, width, height);
+                ImGui::OpenPopup("Gaussian Filter");
             }
+
+            imguiGaussianFilter(data, width, height, filtersStack);
 
             if (ImGui::Button("Apply Robert Edge Detection"))
             {
                 ApplyRobertEdgeDetection(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Sobel Edge Detection"))
             {
                 ApplySobelEdgeDetection(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Dilation"))
             {
                 ApplyDilation(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Erosion"))
             {
                 ApplyErosion(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Solarisation"))
             {
                 ApplySolarisation(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
-            if (ImGui::Button("Apply Cross Processing"))
+            if (ImGui::Button("Apply Median Cut"))
             {
-                ApplyCrossProcessing(data, width, height);
+                ApplyMedianCut(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
             }
 
             if (ImGui::Button("Apply Threshold"))
             {
                 ApplyThreshold(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Mean Filter"))
+            {
+                ApplyMedianFilter(data, width, height, 7);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Bilateral Filter"))
+            {
+                ApplyBilateralFilter(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Quantization"))
+            {
+                ApplyQuantization(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Otsu Threshold"))
+            {
+                ApplyOtsuThreshold(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Cartoon"))
+            {
+                ApplyCartoon(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            // Create ImGui window
+            ImGui::Begin("State");
+
+            if (ImGui::Button("Undo") && filtersStack.size() > 0)
+            {
+                stbi_image_free(data);
+                if (filtersStack.size() > 1) data = filtersStack[filtersStack.size() - 2];
+                else data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
+                filtersStack.pop_back();
             }
 
             if (ImGui::Button("Revert"))
             {
                 stbi_image_free(data);
                 data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
+                filtersStack.clear();
             }
+
+            ImGui::End();
+
+            ImGui::End();
         }
 
         ImGui::End();
