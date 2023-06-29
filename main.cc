@@ -27,6 +27,8 @@
 #include "cartoon.hh"
 #include "halftone.hh"
 #include "colorPencil.hh"
+#include "vintage.hh"
+#include "vignette.hh"
 
 int main()
 {
@@ -220,6 +222,14 @@ int main()
                 filtersStack.push_back(filteredData);
             }
 
+            if (ImGui::Button("Apply Vignette"))
+            {
+                ApplyVignetteEffect(data, width, height);
+                unsigned char* filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
             // START EDGE DETECTION WINDOW
             // Create ImGui window
             ImGui::Begin("Edge Detection");
@@ -265,6 +275,14 @@ int main()
             if (ImGui::Button("Apply Pencil Sketch"))
             {
                 ApplyColorPencilSketch(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Vintage"))
+            {
+                ApplyVintageFilter(data, width, height);
                 unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);

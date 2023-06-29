@@ -2,6 +2,7 @@ target_sources("${PROJECT_NAME}_lib" PRIVATE
 "artisticFilters/cartoon.cc"
 "artisticFilters/colorPencil.cc"
 "artisticFilters/halftone.cc"
+"artisticFilters/vintage.cc"
 "utils/bilateralFilter.cc"
 "utils/dilation.cc"
 "utils/erosion.cc"
@@ -16,4 +17,5 @@ target_sources("${PROJECT_NAME}_lib" PRIVATE
 "utils/sepia.cc"
 "utils/sobelEdgeDetection.cc"
 "utils/solarisation.cc"
+"utils/vignette.cc"
 )
