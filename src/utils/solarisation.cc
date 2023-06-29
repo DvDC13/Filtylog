@@ -1,4 +1,4 @@
-#pragma once
+#include "solarisation.hh"
 
 void ApplySolarisation(unsigned char *imageData, int width, int height)
 {

@@ -1,6 +1,4 @@
-#pragma once
-
-#include <algorithm>
+#include "sepia.hh"
 
 void ApplySepia(unsigned char *imageData, int width, int height)
 {

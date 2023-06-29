@@ -1,8 +1,4 @@
-#pragma once
-
-#include <iostream>
-
-#include "otsuThreshold.h"
+#include "halftone.hh"
 
 void ApplyHalftone(unsigned char *imageData, int width, int height, int dotSize, int dotSpacing, unsigned char dotThreshold)
 {

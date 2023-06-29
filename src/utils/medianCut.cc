@@ -1,19 +1,4 @@
-#pragma once
-
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
-#define DEPTH 2
-
-struct Color
-{
-    int r;
-    int g;
-    int b;
-    int rIndex;
-    int cIndex;
-};
+#include "medianCut.hh"
 
 bool CompareColorsR(Color a, Color b)
 {
