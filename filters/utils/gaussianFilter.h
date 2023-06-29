@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <cstring>
 
 void ApplyGaussianFilter(unsigned char *imageData, int width, int height, int gaussianKernelSize, float *gaussianKernel)
 {

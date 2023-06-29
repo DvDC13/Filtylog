@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "otsuThreshold.h"
+
 void ApplyHalftone(unsigned char *imageData, int width, int height, int dotSize, int dotSpacing, unsigned char dotThreshold)
 {
     // Iterate over each pixel in the image

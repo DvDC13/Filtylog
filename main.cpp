@@ -26,6 +26,7 @@
 #include "otsuThreshold.h"
 #include "cartoon.h"
 #include "halftone.h"
+#include "colorPencil.h"
 
 int main()
 {
@@ -80,7 +81,7 @@ int main()
 
         // open Dialog Simple
         if (ImGui::Button("Choose Image"))
-            ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".png", ".");
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".jpg", ".");
 
         // display
         if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
@@ -260,6 +261,14 @@ int main()
             }
 
             imguiHalftone(data, width, height, filtersStack);
+
+            if (ImGui::Button("Apply Pencil Sketch"))
+            {
+                ApplyColorPencilSketch(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
 
             ImGui::End();
             // END ARTISTIC FILTERS WINDOW

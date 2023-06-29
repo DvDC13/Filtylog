@@ -4,8 +4,6 @@ project(Filtylog)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(OpenCV REQUIRED)
-
 find_package(glfw3 3.3 REQUIRED)
 
 include_directories(imgui)
@@ -31,4 +29,4 @@ include_directories(glad)
 
 add_executable(filtylog main.cpp)
 
-target_link_libraries(filtylog imgui imGuiFileDialog stb_image glfw GL dl ${OpenCV_LIBS})
+target_link_libraries(filtylog imgui imGuiFileDialog stb_image glfw GL dl)
