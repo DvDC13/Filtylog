@@ -1,4 +1,4 @@
-#pragma once
+#include "negative.hh"
 
 void ApplyNegative(unsigned char *imageData, int width, int height)
 {

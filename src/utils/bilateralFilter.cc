@@ -1,6 +1,4 @@
-#pragma once
-
-#include <cmath>
+#include "bilateralFilter.hh"
 
 void ApplyBilateralFilter(unsigned char* imageData, int width, int height)
 {

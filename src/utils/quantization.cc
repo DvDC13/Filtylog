@@ -1,7 +1,4 @@
-#pragma once
-
-#include <iostream>
-#include <cmath>
+#include "quantization.hh"
 
 void ApplyQuantization(unsigned char* imageData, int width, int height)
 {

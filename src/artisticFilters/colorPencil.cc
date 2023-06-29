@@ -1,13 +1,4 @@
-#pragma once
-
-#include <iostream>
-
-#include "grayscale.h"
-#include "medianFilter.h"
-#include "sobelEdgeDetection.h"
-#include "negative.h"
-
-#include "linearInterpolation.h"
+#include "colorPencil.hh"
 
 void ApplyColorPencilSketch(unsigned char* imageData, int width, int height)
 {

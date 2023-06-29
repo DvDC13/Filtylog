@@ -1,13 +1,4 @@
-#pragma once
-
-#include <cstring>
-
-#include "sobelEdgeDetection.h"
-#include "medianFilter.h"
-#include "bilateralFilter.h"
-#include "quantization.h"
-#include "negative.h"
-#include "otsuThreshold.h"
+#include "cartoon.hh"
 
 void Recombine(unsigned char* imageData, unsigned char* edgeData, int width, int height)
 {

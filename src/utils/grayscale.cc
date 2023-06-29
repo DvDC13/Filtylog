@@ -1,4 +1,4 @@
-#pragma once
+#include "grayscale.hh"
 
 void ApplyGrayscale(unsigned char *imageData, int width, int height)
 {

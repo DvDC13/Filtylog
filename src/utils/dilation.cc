@@ -1,17 +1,12 @@
-#pragma once
+#include "dilation.hh"
 
-#include <algorithm>
-#include <cmath>
-
-#include "dilation.h"
-
-void ApplyErosion(unsigned char *imageData, int width, int height)
+void ApplyDilation(unsigned char *imageData, int width, int height)
 {
     unsigned char *tempImageData = new unsigned char[width * height * 3];
 
     for (int i = 0; i < width * height; ++i)
     {
-        int r = 255, g = 255, b = 255;
+        int r = 0, g = 0, b = 0;
 
         for (int j = 0; j < structuringElementSize; ++j)
         {
@@ -23,9 +18,9 @@ void ApplyErosion(unsigned char *imageData, int width, int height)
                 if (x < 0 || x >= width || y < 0 || y >= height)
                     continue;
 
-                r = std::min(r, imageData[(y * width + x) * 3] * structuringElement[j][k]);
-                g = std::min(g, imageData[(y * width + x) * 3 + 1] * structuringElement[j][k]);
-                b = std::min(b, imageData[(y * width + x) * 3 + 2] * structuringElement[j][k]);
+                r = std::max(r, imageData[(y * width + x) * 3] * structuringElement[j][k]);
+                g = std::max(g, imageData[(y * width + x) * 3 + 1] * structuringElement[j][k]);
+                b = std::max(b, imageData[(y * width + x) * 3 + 2] * structuringElement[j][k]);
             }
         }
 

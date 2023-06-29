@@ -22,11 +22,15 @@ add_library(stb_image STATIC stb_image/stb_image.cpp)
 include_directories(imGuiFileDialog)
 add_library(imGuiFileDialog STATIC imGuiFileDialog/ImGuiFileDialog.cpp)
 
-include_directories(filters/artisticFilters)
-include_directories(filters/utils)
+include_directories(include/artisticFilters)
+include_directories(include/utils)
+
+add_library("${PROJECT_NAME}_lib" STATIC)
+target_include_directories("${PROJECT_NAME}_lib" PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_subdirectory(src)
 
 include_directories(glad)
 
-add_executable(filtylog main.cpp)
+add_executable(filtylog main.cc)
 
-target_link_libraries(filtylog imgui imGuiFileDialog stb_image glfw GL dl)
+target_link_libraries(filtylog imgui imGuiFileDialog stb_image glfw GL dl "${PROJECT_NAME}_lib")

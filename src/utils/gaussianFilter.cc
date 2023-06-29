@@ -1,8 +1,4 @@
-#pragma once
-
-#include <algorithm>
-#include <numeric>
-#include <cstring>
+#include "gaussianFilter.hh"
 
 void ApplyGaussianFilter(unsigned char *imageData, int width, int height, int gaussianKernelSize, float *gaussianKernel)
 {
