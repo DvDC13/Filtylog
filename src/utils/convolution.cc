@@ -1,6 +1,6 @@
-#include "gaussianFilter.hh"
+#include "convolution.hh"
 
-void ApplyGaussianFilter(unsigned char *imageData, int width, int height, int gaussianKernelSize, float *gaussianKernel)
+void ApplyConvolutionFilter(unsigned char *imageData, int width, int height, int KernelSize, float *Kernel)
 {
     unsigned char *tempImageData = new unsigned char[width * height * 3];
 
@@ -8,25 +8,25 @@ void ApplyGaussianFilter(unsigned char *imageData, int width, int height, int ga
     {
         int r = 0, g = 0, b = 0;
 
-        for (int j = 0; j < gaussianKernelSize; ++j)
+        for (int j = 0; j < KernelSize; ++j)
         {
-            for (int k = 0; k < gaussianKernelSize; ++k)
+            for (int k = 0; k < KernelSize; ++k)
             {
-                int x = i % width + j - gaussianKernelSize / 2;
-                int y = i / width + k - gaussianKernelSize / 2;
+                int x = i % width + j - KernelSize / 2;
+                int y = i / width + k - KernelSize / 2;
 
                 if (x < 0 || x >= width || y < 0 || y >= height)
                     continue;
 
-                r += imageData[(y * width + x) * 3] * gaussianKernel[j * gaussianKernelSize + k];
-                g += imageData[(y * width + x) * 3 + 1] * gaussianKernel[j * gaussianKernelSize + k];
-                b += imageData[(y * width + x) * 3 + 2] * gaussianKernel[j * gaussianKernelSize + k];
+                r += imageData[(y * width + x) * 3] * Kernel[j * KernelSize + k];
+                g += imageData[(y * width + x) * 3 + 1] * Kernel[j * KernelSize + k];
+                b += imageData[(y * width + x) * 3 + 2] * Kernel[j * KernelSize + k];
             }
         }
 
-        int rSum = std::accumulate(gaussianKernel, gaussianKernel + gaussianKernelSize * gaussianKernelSize, 0);
-        int gSum = std::accumulate(gaussianKernel, gaussianKernel + gaussianKernelSize * gaussianKernelSize, 0);
-        int bSum = std::accumulate(gaussianKernel, gaussianKernel + gaussianKernelSize * gaussianKernelSize, 0);
+        int rSum = std::accumulate(Kernel, Kernel + KernelSize * KernelSize, 0);
+        int gSum = std::accumulate(Kernel, Kernel + KernelSize * KernelSize, 0);
+        int bSum = std::accumulate(Kernel, Kernel + KernelSize * KernelSize, 0);
 
         tempImageData[i * 3] = r / rSum;
         tempImageData[i * 3 + 1] = g / gSum;
@@ -39,10 +39,10 @@ void ApplyGaussianFilter(unsigned char *imageData, int width, int height, int ga
     delete[] tempImageData;
 }
 
-void imguiGaussianFilter(unsigned char *data, int width, int height, std::vector<unsigned char*>& filtersStack)
+void imguiConvolutionFilter(unsigned char *data, int width, int height, std::vector<unsigned char*>& filtersStack)
 {
-    // Gaussian Filter popup window
-    if (ImGui::BeginPopupModal("Gaussian Filter", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    //  Filter popup window
+    if (ImGui::BeginPopupModal("Convolution Filter", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
         static int kernelSize = 3;                                   // Default kernel size
         static float *kernel = new float[kernelSize * kernelSize]{}; // Default kernel matrix
@@ -81,7 +81,7 @@ void imguiGaussianFilter(unsigned char *data, int width, int height, std::vector
 
         if (ImGui::Button("Apply"))
         {
-            ApplyGaussianFilter(data, width, height, kernelSize, kernel);
+            ApplyConvolutionFilter(data, width, height, kernelSize, kernel);
             unsigned char *filteredData = new unsigned char[width * height * 3];
             std::memcpy(filteredData, data, width * height * 3);
             filtersStack.push_back(filteredData);

@@ -13,7 +13,7 @@
 #include "grayscale.hh"
 #include "negative.hh"
 #include "sepia.hh"
-#include "gaussianFilter.hh"
+#include "convolution.hh"
 #include "dilation.hh"
 #include "erosion.hh"
 #include "robertEdgeDetection.hh"
@@ -27,6 +27,9 @@
 #include "cartoon.hh"
 #include "halftone.hh"
 #include "colorPencil.hh"
+#include "sharpen.hh"
+#include "crossHatch.hh"
+#include "dither.hh"
 
 int main()
 {
@@ -149,12 +152,12 @@ int main()
                 filtersStack.push_back(filteredData);
             }
 
-            if (ImGui::Button("Apply Gaussian Filter"))
+            if (ImGui::Button("Apply Convolution Filter"))
             {
-                ImGui::OpenPopup("Gaussian Filter");
+                ImGui::OpenPopup("Convolution Filter");
             }
 
-            imguiGaussianFilter(data, width, height, filtersStack);
+            imguiConvolutionFilter(data, width, height, filtersStack);
 
             if (ImGui::Button("Apply Dilation"))
             {
@@ -167,6 +170,14 @@ int main()
             if (ImGui::Button("Apply Erosion"))
             {
                 ApplyErosion(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Sharpen"))
+            {
+                ApplySharpen(data, width, height);
                 unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
@@ -265,6 +276,22 @@ int main()
             if (ImGui::Button("Apply Pencil Sketch"))
             {
                 ApplyColorPencilSketch(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Crosshatch"))
+            {
+                ApplyCrossHatch(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Dither"))
+            {
+                ApplyDither(data, width, height);
                 unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
