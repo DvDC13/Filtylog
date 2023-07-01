@@ -305,6 +305,11 @@ int main()
             if (ImGui::Button("Apply Vintage"))
             {
                 ApplyVintageFilter(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+            
             if (ImGui::Button("Apply Crosshatch"))
             {
                 ApplyCrossHatch(data, width, height);
