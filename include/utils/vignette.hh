@@ -2,4 +2,4 @@
 
 #include <cmath>
 
-double ApplyVignetteEffect(unsigned char* imageData, int width, int height);
+void ApplyVignetteEffect(unsigned char* imageData, int width, int height);

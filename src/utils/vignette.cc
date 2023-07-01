@@ -1,8 +1,7 @@
 #include "vignette.hh"
 
-double ApplyVignetteEffect(unsigned char* imageData, int width, int height)
+void ApplyVignetteEffect(unsigned char* imageData, int width, int height)
 {
-    double distance = 0.0;
     for (int i = 0; i < width * height * 3; i++)
     {
         double radius = sqrt(pow(width / 2, 2) + pow(height / 2, 2));
@@ -12,6 +11,4 @@ double ApplyVignetteEffect(unsigned char* imageData, int width, int height)
 
         imageData[i] = imageData[i] < 0 ? 0 : (imageData[i] > 255 ? 255 : imageData[i]);
     }
-
-    return distance;
 }
