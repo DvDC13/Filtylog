@@ -28,6 +28,9 @@
 #include "cartoon.hh"
 #include "halftone.hh"
 #include "colorPencil.hh"
+#include "vintage.hh"
+#include "vignette.hh"
+#include "noise.hh"
 #include "sharpen.hh"
 #include "crossHatch.hh"
 #include "dither.hh"
@@ -224,7 +227,7 @@ int main()
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
             }
-
+          
             // Declare variables for histogram calculation
             static int selectedChannel = 0;
             float histogram[256];
@@ -297,6 +300,22 @@ int main()
                 ImGui::PlotHistogram("", histogram, IM_ARRAYSIZE(histogram), 0, nullptr, 0.0f, maxHistogramValue, ImVec2(0, 80));
                 ImGui::End();
             }
+          
+            if (ImGui::Button("Apply Vignette"))
+            {
+                ApplyVignetteEffect(data, width, height);
+                unsigned char* filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Noise"))
+            {
+                ApplyNoise(data, width, height);
+                unsigned char* filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
 
             // START EDGE DETECTION WINDOW
             // Create ImGui window
@@ -348,6 +367,14 @@ int main()
                 filtersStack.push_back(filteredData);
             }
 
+            if (ImGui::Button("Apply Vintage"))
+            {
+                ApplyVintageFilter(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+            
             if (ImGui::Button("Apply Crosshatch"))
             {
                 ApplyCrossHatch(data, width, height);
