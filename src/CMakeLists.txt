@@ -20,10 +20,7 @@ target_sources("${PROJECT_NAME}_lib" PRIVATE
 "utils/sepia.cc"
 "utils/sobelEdgeDetection.cc"
 "utils/solarisation.cc"
-<<<<<<< HEAD
 "utils/vignette.cc"
 "utils/noise.cc"
-=======
 "utils/sharpen.cc"
->>>>>>> f1405f55b46a2db94cb9bf49698c649104b76c4e
 )
