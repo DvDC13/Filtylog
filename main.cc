@@ -30,6 +30,7 @@
 #include "sharpen.hh"
 #include "crossHatch.hh"
 #include "dither.hh"
+#include "oilPainting.hh"
 
 int main()
 {
@@ -292,6 +293,14 @@ int main()
             if (ImGui::Button("Apply Dither"))
             {
                 ApplyDither(data, width, height);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Oil Painting"))
+            {
+                ApplyOilPainting(data, width, height, 3, 5);
                 unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
