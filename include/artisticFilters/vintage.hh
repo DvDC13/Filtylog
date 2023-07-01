@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <random>
+#include "noise.hh"
 #include "sepia.hh"
 #include "vignette.hh"
 

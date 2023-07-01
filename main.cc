@@ -29,6 +29,7 @@
 #include "colorPencil.hh"
 #include "vintage.hh"
 #include "vignette.hh"
+#include "noise.hh"
 
 int main()
 {
@@ -228,6 +229,15 @@ int main()
                 unsigned char* filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Noise"))
+            {
+                ApplyNoise(data, width, height);
+                unsigned char* filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+
             }
 
             // START EDGE DETECTION WINDOW
