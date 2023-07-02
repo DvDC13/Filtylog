@@ -20,6 +20,7 @@
 #include "sobelEdgeDetection.hh"
 #include "solarisation.hh"
 #include "medianCut.hh"
+#include "histogram.hh"
 #include "bilateralFilter.hh"
 #include "medianFilter.hh"
 #include "quantization.hh"
@@ -187,14 +188,6 @@ int main()
                 filtersStack.push_back(filteredData);
             }
 
-            if (ImGui::Button("Apply Solarisation"))
-            {
-                ApplySolarisation(data, width, height);
-                unsigned char *filteredData = new unsigned char[width * height * 3];
-                std::memcpy(filteredData, data, width * height * 3);
-                filtersStack.push_back(filteredData);
-            }
-
             if (ImGui::Button("Apply Median Cut"))
             {
                 ApplyMedianCut(data, width, height);
@@ -234,7 +227,80 @@ int main()
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
             }
+          
+            // Declare variables for histogram calculation
+            static int selectedChannel = 0;
+            float histogram[256];
+            bool calculateHistogram = false;
+            static bool showHistogram = false; // Make the flag persistent
+            static int maxHistogramValue = 0;
 
+            if (ImGui::Button("Calculate Histogram"))
+            {
+                ImGui::OpenPopup("Histogram");
+            }
+
+            if (ImGui::BeginPopupModal("Histogram", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                // Create ImGui window
+                ImGui::Text("Select Channel:");
+                ImGui::RadioButton("Red", &selectedChannel, 0);
+                ImGui::RadioButton("Green", &selectedChannel, 1);
+                ImGui::RadioButton("Blue", &selectedChannel, 2);
+                ImGui::RadioButton("Gray", &selectedChannel, 3);
+
+                if (ImGui::Button("Apply"))
+                {
+                    calculateHistogram = true;
+                }
+
+                if (ImGui::Button("Close"))
+                {
+                    showHistogram = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::End();
+            }
+
+            // Perform histogram calculation based on selected channel
+            if (calculateHistogram)
+            {
+                // Reset flag
+                calculateHistogram = false;
+
+                if (selectedChannel == 0)
+                {
+                    CalculateHistogram(data, width, height, histogram, HistogramType::Red);
+                }
+                else if (selectedChannel == 1)
+                {
+                    CalculateHistogram(data, width, height, histogram, HistogramType::Green);
+                }
+                else if (selectedChannel == 2)
+                {
+                    CalculateHistogram(data, width, height, histogram, HistogramType::Blue);
+                }
+                else if (selectedChannel == 3)
+                {
+                    CalculateHistogram(data, width, height, histogram, HistogramType::Grayscale);
+                }
+
+                // Find the maximum value in the histogram
+                maxHistogramValue = CalculateHistogramMax(histogram);
+
+                // Set the flag to show the histogram
+                showHistogram = true;
+            }
+
+            // Display histogram if the flag is set
+            if (showHistogram)
+            {
+                ImGui::Begin("Histogram");
+                ImGui::PlotHistogram("", histogram, IM_ARRAYSIZE(histogram), 0, nullptr, 0.0f, maxHistogramValue, ImVec2(0, 80));
+                ImGui::End();
+            }
+          
             if (ImGui::Button("Apply Vignette"))
             {
                 ApplyVignetteEffect(data, width, height);
@@ -249,7 +315,6 @@ int main()
                 unsigned char* filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
-
             }
 
             // START EDGE DETECTION WINDOW
@@ -329,6 +394,14 @@ int main()
             if (ImGui::Button("Apply Oil Painting"))
             {
                 ApplyOilPainting(data, width, height, 3, 5);
+                unsigned char *filteredData = new unsigned char[width * height * 3];
+                std::memcpy(filteredData, data, width * height * 3);
+                filtersStack.push_back(filteredData);
+            }
+
+            if (ImGui::Button("Apply Solarisation"))
+            {
+                ApplySolarisation(data, width, height);
                 unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
