@@ -33,3 +33,7 @@
 
 # Build
 build/
+imgui.ini
+
+# others
+.vscode/
