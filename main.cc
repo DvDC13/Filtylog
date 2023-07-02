@@ -338,7 +338,7 @@ int main()
             if (ImGui::Button("Apply Morphe"))
             {
                 int width2, height2, channels2;
-                std::string filePathName2 = "/home/tutuslife/Downloads/bunny.jpg";
+                std::string filePathName2 = "/home/tutuslife/Downloads/beach.jpg";
                 unsigned char* data2 = stbi_load(filePathName2.c_str(), &width2, &height2, &channels2, 3);
 
                 ApplyMorphe(data, width, height, data2, width2, height2);
