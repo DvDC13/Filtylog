@@ -17,7 +17,8 @@ add_library(imgui STATIC
             imgui/backends/imgui_impl_opengl3.cpp)
 
 include_directories(stb_image)
-add_library(stb_image STATIC stb_image/stb_image.cpp)
+add_library(stb_image STATIC stb_image/stb_image.cpp
+                             stb_image/stb_image_write.cpp)
 
 include_directories(imGuiFileDialog)
 add_library(imGuiFileDialog STATIC imGuiFileDialog/ImGuiFileDialog.cpp)

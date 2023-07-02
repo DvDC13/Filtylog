@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include "stb_image.h"
+#include "stb_image_write.h"
 #include "ImGuiFileDialog.h"
 
 #include "grayscale.hh"
@@ -228,7 +229,7 @@ int main()
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
             }
-          
+
             // Declare variables for histogram calculation
             static int selectedChannel = 0;
             float histogram[256];
@@ -301,7 +302,7 @@ int main()
                 ImGui::PlotHistogram("", histogram, IM_ARRAYSIZE(histogram), 0, nullptr, 0.0f, maxHistogramValue, ImVec2(0, 80));
                 ImGui::End();
             }
-          
+
             if (ImGui::Button("Apply Vignette"))
             {
                 ApplyVignetteEffect(data, width, height);
@@ -399,7 +400,7 @@ int main()
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
             }
-          
+
             static bool openPathWindow = false;
             static char inputPathBuffer[256];
 
@@ -475,6 +476,35 @@ int main()
                 stbi_image_free(data);
                 data = stbi_load(filePathName.c_str(), &width, &height, &channels, 3);
                 filtersStack.clear();
+            }
+
+            static bool openPathWindowSave = false;
+            static char inputPathBufferSave[256];
+
+            if (ImGui::Button("Save"))
+            {
+                openPathWindowSave = true;
+            }
+
+            if (openPathWindowSave)
+            {
+                ImGui::Begin("Enter Path", &openPathWindowSave, ImGuiWindowFlags_AlwaysAutoResize);
+
+                ImGui::InputText("Absolute Path Of Image", inputPathBufferSave, IM_ARRAYSIZE(inputPathBufferSave));
+
+                if (ImGui::Button("Save"))
+                {
+                    stbi_write_png(inputPathBufferSave, width, height, 3, data, width * 3);
+                    openPathWindowSave = false;
+                    memset(inputPathBufferSave, 0, sizeof(inputPathBufferSave));
+                }
+
+                if (ImGui::Button("Close"))
+                {
+                    openPathWindowSave = false;
+                }
+
+                ImGui::End();
             }
 
             ImGui::End();
