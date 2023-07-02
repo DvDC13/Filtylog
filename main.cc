@@ -34,7 +34,7 @@
 #include "crossHatch.hh"
 #include "dither.hh"
 #include "oilPainting.hh"
-#include "morphe.hh"
+#include "styleTransfer.hh"
 
 int main()
 {
@@ -239,7 +239,7 @@ int main()
             if (ImGui::Button("Apply Vignette"))
             {
                 ApplyVignetteEffect(data, width, height);
-                unsigned char* filteredData = new unsigned char[width * height * 3];
+                unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
             }
@@ -247,10 +247,9 @@ int main()
             if (ImGui::Button("Apply Noise"))
             {
                 ApplyNoise(data, width, height);
-                unsigned char* filteredData = new unsigned char[width * height * 3];
+                unsigned char *filteredData = new unsigned char[width * height * 3];
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
-
             }
 
             // START EDGE DETECTION WINDOW
@@ -310,7 +309,7 @@ int main()
                 std::memcpy(filteredData, data, width * height * 3);
                 filtersStack.push_back(filteredData);
             }
-            
+
             if (ImGui::Button("Apply Crosshatch"))
             {
                 ApplyCrossHatch(data, width, height);
@@ -335,16 +334,49 @@ int main()
                 filtersStack.push_back(filteredData);
             }
 
-            if (ImGui::Button("Apply Morphe"))
-            {
-                int width2, height2, channels2;
-                std::string filePathName2 = "/home/tutuslife/Downloads/beach.jpg";
-                unsigned char* data2 = stbi_load(filePathName2.c_str(), &width2, &height2, &channels2, 3);
+            static bool openPathWindow = false;
+            static char inputPathBuffer[256];
 
-                ApplyMorphe(data, width, height, data2, width2, height2);
-                unsigned char* filteredData = new unsigned char[width * height * 3];
-                std::memcpy(filteredData, data, width * height * 3);
-                filtersStack.push_back(filteredData);
+            if (ImGui::Button("Apply Style Transfer"))
+            {
+                openPathWindow = true;
+            }
+
+            if (openPathWindow)
+            {
+                ImGui::Begin("Enter Path", &openPathWindow, ImGuiWindowFlags_AlwaysAutoResize);
+
+                ImGui::InputText("Absolute Path Of Second Image", inputPathBuffer, IM_ARRAYSIZE(inputPathBuffer));
+
+                if (ImGui::Button("Apply"))
+                {
+                    int width2, height2, channels2;
+                    unsigned char *data2 = stbi_load(inputPathBuffer, &width2, &height2, &channels2, 3);
+
+                    if (data2 != nullptr)
+                    {
+                        ApplyStyleTransfer(data, width, height, data2, width2, height2);
+                        unsigned char *filteredData = new unsigned char[width * height * 3];
+                        std::memcpy(filteredData, data, width * height * 3);
+                        filtersStack.push_back(filteredData);
+
+                        stbi_image_free(data2);
+                        memset(inputPathBuffer, 0, sizeof(inputPathBuffer));
+                    }
+                    else
+                    {
+                        std::cout << "Failed to load the second image." << std::endl;
+                    }
+
+                    openPathWindow = false;
+                }
+
+                if (ImGui::Button("Close"))
+                {
+                    openPathWindow = false;
+                }
+
+                ImGui::End();
             }
 
             ImGui::End();

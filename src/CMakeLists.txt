@@ -6,7 +6,7 @@ target_sources("${PROJECT_NAME}_lib" PRIVATE
 "artisticFilters/crossHatch.cc"
 "artisticFilters/dither.cc"
 "artisticFilters/oilPainting.cc"
-"artisticFilters/morphe.cc"
+"artisticFilters/styleTransfer.cc"
 "utils/bilateralFilter.cc"
 "utils/dilation.cc"
 "utils/erosion.cc"

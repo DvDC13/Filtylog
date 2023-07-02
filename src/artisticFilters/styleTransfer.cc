@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "morphe.hh"
+#include "styleTransfer.hh"
 
 // Function to calculate the squared difference between two RGB colors
 double colorDifference(const unsigned char* color1, const unsigned char* color2) {
@@ -13,7 +13,7 @@ double colorDifference(const unsigned char* color1, const unsigned char* color2)
     return diffR * diffR + diffG * diffG + diffB * diffB;
 }
 
-void ApplyMorphe(unsigned char* imageData, int width, int height,
+void ApplyStyleTransfer(unsigned char* imageData, int width, int height,
                     unsigned char* styleImage, int width2, int height2)
 {
     if (width != width2 || height != height2)
