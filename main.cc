@@ -91,7 +91,7 @@ int main()
 
         // open Dialog Simple
         if (ImGui::Button("Choose Image"))
-            ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".((jpg|png|jpeg|webp|bmp))", ".");
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".((jpg|png|jpeg|webp|bmp|JPG))", ".");
 
         // display
         if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))

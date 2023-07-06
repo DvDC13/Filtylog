@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "cartoon.hh"
 
 void Recombine(unsigned char* imageData, unsigned char* edgeData, int width, int height)
@@ -20,14 +22,22 @@ void ApplyCartoon(unsigned char* imageData, int width, int height)
     unsigned char* copyImageData = new unsigned char[width * height * 3];
     std::memcpy(copyImageData, imageData, width * height * 3);
 
-    ApplyMedianFilter(imageData, width, height, 7);
-    ApplySobelEdgeDetection(imageData, width, height);
-    ApplyOtsuThreshold(imageData, width, height);
-    ApplyNegative(imageData, width, height);
+    std::thread thread1([&]() {
+        ApplyMedianFilter(imageData, width, height, 7);
+        ApplySobelEdgeDetection(imageData, width, height);
+        ApplyOtsuThreshold(imageData, width, height);
+        ApplyNegative(imageData, width, height);
+    });
 
-    ApplyBilateralFilter(copyImageData, width, height);
-    ApplyMedianFilter(copyImageData, width, height, 7);
-    ApplyQuantization(copyImageData, width, height);
+    std::thread thread2([&]() {
+        ApplyBilateralFilter(copyImageData, width, height);
+        ApplyMedianFilter(copyImageData, width, height, 7);
+        ApplyQuantization(copyImageData, width, height);
+    });
+
+    // wait
+    thread1.join();
+    thread2.join();
 
     Recombine(copyImageData, imageData, width, height);
 
