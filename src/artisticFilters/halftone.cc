@@ -76,6 +76,11 @@ void imguiHalftone(unsigned char *data, int width, int height, std::vector<unsig
             ImGui::CloseCurrentPopup();
         }
 
+        if (ImGui::Button("Close"))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
         ImGui::EndPopup();
     }
 }

@@ -30,7 +30,6 @@ void ApplyCrossHatch(unsigned char* imageData, int width, int height)
             if (lineX < lineThickness || lineY < lineThickness)
             {
                 // Darker color for pixels within the line thickness
-                // random between 240 and 255
                 imageData[3 * (y * width + x)] = 0;
                 imageData[3 * (y * width + x) + 1] = 0;
                 imageData[3 * (y * width + x) + 2] = 0;
